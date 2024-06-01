@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+      <!-- текущая реализация-->
+      <p>U need to be authorised to work</p>
+      <p>{{ .SomeInfo}}</p>
+      <form action="/login" method="post">
+        Username: <input type="text" name="username"><br>
+        Password: <input type="password" name="password"><br>
+        <input type="submit" value="LogIn">
+      </form>
+      <p><a class="main" href="/">Back to main</a></p>
+
+
+      <!--прийти к этой реализации-->
+      
+
+
+
+      
+      <!-- сделать форму в которую вводить логин пароль  -->
+      <input type="text" id="inputField" placeholder="Введите слово">
+      <!-- сделать кнопку которая вызывает функцию например send_data_to_server_nigga  -->
+      <button id="requestButton">Отправить запрос</button>
+      <p id="response"></p>
+      
+      
+      <script>
+        // ловить клик и стандартным fetch отправлять данные на сервер и принимать их соответственно
+        document.getElementById('requestButton').addEventListener('click', () => {
+            const inputValue = document.getElementById('inputField').value;
+
+            fetch('https://localhost:8080/login', { // Замените на нужный вам URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ word: inputValue })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('response').textContent = 'Error: ' + error;
+            });
+        });
+    </script>
+</body>
+</html>

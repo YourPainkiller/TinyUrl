@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css" />
+    <title>Document</title>
+</head>
+<body>
+    <h1>Main page</h1>
+    <h2>Hello {{ .UserName}}!</h2>
+    <main>
+        <header>
+          <p><a class="register" href="/register">Sign Up</a></p>
+          <p><a class="login" href="/login">Sign In</a></p>
+          <p><a class="TinyUrl" href="/tinylinks">Tiny Ur Link</a></p>
+          <p><a class="logout" href="/logout">Log Out</a></p>
+        </header>
+      </main>
+</body>
+</html>
