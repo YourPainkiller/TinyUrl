@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <h1><b>{{ .SomeInfo}}</b></h1>
+        <p>Hello {{ .UserName}}!</p>
+        <p>There is a list of ur shortened links</p>
+        <p><a class="main" href="/">Back to main</a></p>
+        <h2>From -> To Form</h2>
+            <form action="/tinylinks" method="post">
+                <label for="from">From:</label>
+                <input type="text" id="from" name="userlink" placeholder="Enter Link To Short">
+                <br><br>
+                <label for="to">To:</label>
+                <input type="text" id="to" name="to" placeholder="Enter prefered shortened version">
+                <br><br>
+                <input type="submit" value="Submit">
+            </form>
+        <p>destination might be only from english letters and numbers</p>
+
+    
+</body>
+</html>

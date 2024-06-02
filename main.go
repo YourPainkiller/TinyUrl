@@ -16,11 +16,11 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var mainPage = template.Must(template.ParseFiles("index.html"))
-var registerPage = template.Must(template.ParseFiles("register.html"))
-var loginPage = template.Must(template.ParseFiles("login.html"))
-var tinylinksPage = template.Must(template.ParseFiles("tinylinks.html"))
-var emptyPage = template.Must(template.ParseFiles("empty.html"))
+var mainPage = template.Must(template.ParseFiles("html/index.html"))
+var registerPage = template.Must(template.ParseFiles("html/register.html"))
+var loginPage = template.Must(template.ParseFiles("html/login.html"))
+var tinylinksPage = template.Must(template.ParseFiles("html/tinylinks.html"))
+var emptyPage = template.Must(template.ParseFiles("html/empty.html"))
 
 func loginForm(w http.ResponseWriter, r *http.Request) {
 	loginPage.Execute(w, nil)
@@ -362,7 +362,7 @@ func selectLink(to string, db *sql.DB) string {
 }
 
 func main() {
-	connStr := "postgres://postgres:qwe@localhost:5432/test_api?sslmode=disable"
+	connStr := "postgres://postgres:secret@localhost:5432/test_api?sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Error in connecting to PSQL\n", err)
