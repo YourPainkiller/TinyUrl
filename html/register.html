@@ -3,18 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Registration Form</title>
 </head>
 <body>
-      <p>{{ .SomeInfo}}</p>
-      <form action="/register" method="post">
-        Username: <input type="text" name="username"><br>
-        Password: <input type="password" name="password"><br>
-        <input type="submit" value="Register">
-      </form>
-      <p>Password and Username should contain English letters or numbers</p>
-      <p><a class="main" href="/">Back to main</a></p>
+    <h2>Registration Form</h2>
+    <form id="registrationForm">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+    <p><a class="main" href="/">Back to main</a></p>
+    <h2 id="pageInfo"></h2>
 
-    
+    <script>
+        async function submitForm() {
+            var form = document.getElementById("registrationForm");
+            var formData = new FormData(form);
+            var jsonObject = {};
+            formData.forEach(function(value, key){
+                jsonObject[key] = value;
+            });
+            var jsonData = JSON.stringify(jsonObject);
+
+            let response = await fetch("/register", {
+                method: "POST",
+                body: jsonData,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+
+            let result = await response.json()
+            document.getElementById("pageInfo").innerHTML = result.status;
+
+        }
+    </script>
 </body>
 </html>

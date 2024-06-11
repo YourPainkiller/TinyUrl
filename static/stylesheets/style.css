@@ -1,0 +1,16 @@
+.parent{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.child1{
+    width: 700px;
+    height: 60px;
+    /* background-color: blanchedalmond; */
+}
+
+.child2{
+    width: 60px;
+    height: 60px;
+    /* background-color: brown; */
+}

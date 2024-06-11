@@ -3,25 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/static/stylesheets/style.css" />
+    <title>Tiny Links</title>
 </head>
 <body>
-        <h1><b>{{ .SomeInfo}}</b></h1>
-        <p>Hello {{ .UserName}}!</p>
-        <p>There is a list of ur shortened links</p>
-        <p><a class="main" href="/">Back to main</a></p>
-        <h2>From -> To Form</h2>
-            <form action="/tinylinks" method="post">
-                <label for="from">From:</label>
-                <input type="text" id="from" name="userlink" placeholder="Enter Link To Short">
-                <br><br>
-                <label for="to">To:</label>
-                <input type="text" id="to" name="to" placeholder="Enter prefered shortened version">
-                <br><br>
-                <input type="submit" value="Submit">
-            </form>
-        <p>destination might be only from english letters and numbers</p>
+    <h2>Tiny Links</h2>
+    <h1 id="pageInfo"><b></b></h1>
+    <p id="greeting"></p>
+    <form id="tinylinksForm">
+        <label for="from">From:</label>
+        <input type="text" id="from" name="userlink" placeholder="Enter Link To Short">
+        <br><br>
+        <label for="to">To:</label>
+        <input type="text" id="to" name="tolink" placeholder="Enter prefered shortened version">
+        <br><br>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+    <p>destination might be only from english letters and numbers</p>
+    <p><a class="main" href="/">Back to main</a></p>
 
     
+
+    {{if eq (len .) 0}}
+    Nothing to see here
+    {{end}}
+    {{range .}}
+    <div class="parent">
+        <div class="child1">{{ .Userlink}} - - - ->{{ .Tolink}}</div>
+        <div class="child2">
+                <button id="{{ .Tolink}}" onclick="deleteElem(this.id)">DELETE</button>
+        </div>
+    </div>
+    {{end}}
+
+    <h2 id="pageInfoh2"></h2>
+
+
+
+
+    <script>
+        async function submitForm() {
+            var form = document.getElementById("tinylinksForm");
+            var formData = new FormData(form);
+            var jsonObject = {};
+            formData.forEach(function(value, key){
+                jsonObject[key] = value;
+            });
+            var jsonData = JSON.stringify(jsonObject);
+
+            let response = await fetch("/tinylinks", {
+                method: "POST",
+                body: jsonData,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+
+            if (response.ok){
+                location.reload()
+            } else {
+                let result = await response.json()
+                document.getElementById("pageInfoh2").innerHTML = result.status;
+            }
+
+        }
+        async function deleteElem(id) {
+            console.log(id)
+            let response = await fetch("/s/" + id, {
+                method: "DELETE",
+            })
+
+            let result = await response.json()
+            console.log(result)
+            location.reload()
+        }
+
+
+
+    </script>
 </body>
 </html>
