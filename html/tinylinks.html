@@ -8,6 +8,7 @@
 </head>
 <body>
     <h2>Tiny Links</h2>
+    <p><a class="main" href="/">Back to main</a></p>
     <h1 id="pageInfo"><b></b></h1>
     <p id="greeting"></p>
     <form id="tinylinksForm">
@@ -20,9 +21,6 @@
         <button type="button" onclick="submitForm()">Submit</button>
     </form>
     <p>destination might be only from english letters and numbers</p>
-    <p><a class="main" href="/">Back to main</a></p>
-
-    
 
     {{if eq (len .) 0}}
     Nothing to see here
@@ -30,6 +28,7 @@
     {{range .}}
     <div class="parent">
         <div class="child1">{{ .Userlink}} - - - ->{{ .Tolink}}</div>
+        <div class="child3">{{ .Redirections}}</div>
         <div class="child2">
                 <button id="{{ .Tolink}}" onclick="deleteElem(this.id)">DELETE</button>
         </div>
@@ -38,10 +37,47 @@
 
     <h2 id="pageInfoh2"></h2>
 
+    <!-- <select name="sort" id="sort" onchange="sortList()">
+        <option value="increase">Increasing</option>
+        <option value="decrease">Decreasing</option>
+        <option value="deafualt">Deafualt</option>
+    </select> -->
+
+    <!-- <button id="dropdown-button"  onclick="toggleDropdown()">Dropdown Button</button>
+    <div id="dropdown-content" style="display: none;">
+        <button onclick="handleOption('Option 1')">Option 1</button>
+        <button onclick="handleOption('Option 2')">Option 2</button>
+        <button onclick="handleOption('Option 3')">Option 3</button>
+    </div> -->
+
+
 
 
 
     <script>
+        // function toggleDropdown() {
+        //     var dropdownContent = document.getElementById("dropdown-content");
+        //     if (dropdownContent.style.display === "none") {
+        //         dropdownContent.style.display = "block";
+        //     } else {
+        //         dropdownContent.style.display = "none";
+        //     }
+        // }
+
+        // function handleOption(option) {
+        //     document.getElementById(dropdown-button)
+        //     alert("You selected: " + option);
+        //     // Here you can add more logic to handle the selected option
+        // }
+        // function sortList() {
+        //     var queryParams = new URLSearchParams(window.location.search);
+        //     // Set new or modify existing parameter value. 
+        //     queryParams.set("sorting_order", document.getElementById("sort").value);
+        //     // Replace current querystring with the new one.
+        //     //history.replaceState(null, null, "?"+queryParams.toString());
+        //     history.pushState(null, null, "?"+queryParams.toString());
+        //     location.reload()
+        // }
         async function submitForm() {
             var form = document.getElementById("tinylinksForm");
             var formData = new FormData(form);

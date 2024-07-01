@@ -37,6 +37,10 @@ func tinylinksForm(db *sql.DB) http.HandlerFunc {
 		if !check {
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 		}
+		values := r.URL.Query()
+		for k, v := range values {
+			fmt.Println(k, " ", v)
+		}
 		data := selectAllUserLinks(userId, db)
 		tinylinksPage.Execute(w, data)
 	}
@@ -53,9 +57,10 @@ type User struct {
 }
 
 type Links struct {
-	Userlink string `json:"userlink"`
-	Tolink   string `json:"tolink"`
-	Owner    int    `json:"owner"`
+	Userlink     string `json:"userlink"`
+	Tolink       string `json:"tolink"`
+	Owner        int    `json:"owner"`
+	Redirections int    `json:"redirections"`
 }
 
 func validatePassword(password string) bool {
@@ -334,6 +339,7 @@ func transfer(db *sql.DB) http.HandlerFunc {
 			emptyPage.Execute(w, nil)
 		} else {
 			userData := selectLink(tolink, db)
+			updateRedirections(db, tolink)
 			http.Redirect(w, r, userData.Userlink, http.StatusSeeOther)
 		}
 
@@ -396,8 +402,9 @@ func createLinkTable(db *sql.DB) {
 		id SERIAL PRIMARY KEY,
 		userlink VARCHAR(100) NOT NULL,
 		tolink VARCHAR(100) NOT NULL,
-		owner INT REFERENCES users(id)
-	)`
+		owner INT REFERENCES users(id),
+		redirections INT DEFAULT 0
+	);`
 
 	_, err := db.Exec(query)
 	if err != nil {
@@ -455,7 +462,7 @@ func selectLink(to string, db *sql.DB) Links {
 
 func selectAllUserLinks(userId int, db *sql.DB) []Links {
 	data := []Links{}
-	rows, err := db.Query("SELECT userlink, tolink FROM links WHERE owner = $1 ORDER BY id ASC", userId)
+	rows, err := db.Query("SELECT userlink, tolink, redirections FROM links WHERE owner = $1 ORDER BY id ASC", userId)
 	if err != nil {
 		log.Fatal("Error in selecting all links\n", err)
 	}
@@ -463,17 +470,27 @@ func selectAllUserLinks(userId int, db *sql.DB) []Links {
 	defer rows.Close()
 	var userlink string
 	var tolink string
+	var redirections int
 
 	for rows.Next() {
-		err := rows.Scan(&userlink, &tolink)
+		err := rows.Scan(&userlink, &tolink, &redirections)
 		if err != nil {
 			log.Fatal("Error in parsing links\n", err)
 		}
 
-		data = append(data, Links{Userlink: userlink, Tolink: tolink, Owner: userId})
+		data = append(data, Links{Userlink: userlink, Tolink: tolink, Owner: userId, Redirections: redirections})
 	}
 	//fmt.Println(data)
 	return data
+}
+
+func updateRedirections(db *sql.DB, tolink string) {
+	query := `UPDATE links SET redirections = redirections + 1 WHERE tolink = $1`
+	_, err := db.Exec(query, tolink)
+
+	if err != nil {
+		log.Fatal("Error in updating links\n", err)
+	}
 }
 
 func main() {

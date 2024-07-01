@@ -1,6 +1,6 @@
 .parent{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .child1{
@@ -10,6 +10,12 @@
 }
 
 .child2{
+    width: 60px;
+    height: 60px;
+    /* background-color: brown; */
+}
+
+.child3{
     width: 60px;
     height: 60px;
     /* background-color: brown; */
