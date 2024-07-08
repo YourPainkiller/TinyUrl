@@ -1,0 +1,71 @@
+{{define "title"}}Tiny Links page{{end}}
+{{define "main"}}
+    <h2>Tiny Links</h2>
+    <p id="greeting"></p>
+    <form id="tinylinksForm">
+        <label for="from">From:</label>
+        <input type="text" id="from" name="userlink" placeholder="Enter Link To Short">
+        <br><br>
+        <label for="to">To:</label>
+        <input type="text" id="to" name="tolink" placeholder="Enter prefered shortened version">
+        <br><br>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+    <p>destination might be only from english letters and numbers</p>
+
+    {{if eq (len .Links) 0}}
+    Nothing to see here
+    {{end}}
+    {{range .Links}}
+    <div class="parent">
+        <div class="child1">{{ .Userlink}} - - - ->{{ .Tolink}}</div>
+        <div class="child3">{{ .Redirections}}</div>
+        <div class="child2">
+                <button id="{{ .Tolink}}" onclick="deleteElem(this.id)">DELETE</button>
+        </div>
+    </div>
+    {{end}}
+
+    <h2 id="pageInfo"></h2>
+
+    <script>
+        async function submitForm() {
+            var form = document.getElementById("tinylinksForm");
+            var formData = new FormData(form);
+            var jsonObject = {};
+            formData.forEach(function(value, key){
+                jsonObject[key] = value;
+            });
+            var jsonData = JSON.stringify(jsonObject);
+
+            let response = await fetch("/user/tinylinks", {
+                method: "POST",
+                body: jsonData,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+
+            if (response.ok){
+                location.reload()
+            } else {
+                let result = await response.json()
+                document.getElementById("pageInfoh2").innerHTML = result.status;
+            }
+
+        }
+        async function deleteElem(id) {
+            //console.log(id)
+            let response = await fetch("/s/" + id, {
+                method: "DELETE",
+            })
+
+            let result = await response.json()
+            //console.log(result)
+            location.reload()
+        }
+
+
+
+    </script>
+{{end}}

@@ -1,25 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
-</head>
-<body>
-    <h2>Registration Form</h2>
-    <form id="registrationForm">
+{{define "title"}}Login Form{{end}}
+{{define "main"}}
+    <h2>Login Form</h2>
+    <form id="loginForm">
         <label for="username">Username:</label><br>
         <input type="text" id="username" name="username"><br>
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password"><br><br>
         <button type="button" onclick="submitForm()">Submit</button>
     </form>
-    <p><a class="main" href="/">Back to main</a></p>
     <h2 id="pageInfo"></h2>
 
     <script>
         async function submitForm() {
-            var form = document.getElementById("registrationForm");
+            var form = document.getElementById("loginForm");
             var formData = new FormData(form);
             var jsonObject = {};
             formData.forEach(function(value, key){
@@ -27,7 +20,7 @@
             });
             var jsonData = JSON.stringify(jsonObject);
 
-            let response = await fetch("/register", {
+            let response = await fetch("/user/login", {
                 method: "POST",
                 body: jsonData,
                 headers: {
@@ -36,9 +29,10 @@
             })
 
             let result = await response.json()
-            document.getElementById("pageInfo").innerHTML = result.status;
-
+            document.getElementById("pageInfo").innerHTML = result.Total;
+            
         }
     </script>
-</body>
-</html>
+{{end}}
+
+

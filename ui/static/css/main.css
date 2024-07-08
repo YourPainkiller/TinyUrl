@@ -20,3 +20,8 @@
     height: 60px;
     /* background-color: brown; */
 }
+
+li {
+    display: inline-block;
+    margin: 30px;
+}

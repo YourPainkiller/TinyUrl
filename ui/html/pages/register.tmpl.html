@@ -1,0 +1,51 @@
+{{define "title"}}Registration Form{{end}}
+{{define "main"}}
+    <h2>Registration Form</h2>
+    <form id="registrationForm">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" placeholder="Username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" placeholder="Password"><br><br>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+    <h2 id="pageInfo"></h2>
+
+    <script>
+        async function submitForm() {
+            var form = document.getElementById("registrationForm");
+            var formData = new FormData(form);
+            var jsonObject = {};
+            formData.forEach(function(value, key){
+                jsonObject[key] = value;
+            });
+            var jsonData = JSON.stringify(jsonObject);
+
+            let response = await fetch("/user/register", {
+                method: "POST",
+                body: jsonData,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+
+            let result = await response.json()
+            let buf = ""
+            let ok = false
+            for(const key in result) {
+                if(key == "status" && result[key] == "succed"){
+                    ok = true 
+                    break;
+                }
+                buf += key + ": " + result[key] + "  "
+            }
+            if(ok){
+                document.getElementById("pageInfo").innerHTML = "Succed registration";
+            } else {
+                document.getElementById("pageInfo").innerHTML = buf;
+            }
+            
+            //document.getElementById("pageInfo").innerHTML = result;
+
+        }
+    </script>
+{{end}}
